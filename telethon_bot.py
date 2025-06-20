@@ -2,12 +2,14 @@ from telethon import TelegramClient, events
 import asyncio
 import smtplib
 from email.mime.text import MIMEText
-import os  # إضافة لاستيراد المتغيرات
+import os
 
-# ✅ قراءة بيانات التليجرام من متغيرات البيئة
-api_id = int(os.getenv("API_ID", 0))
-api_hash = os.getenv("API_HASH", "")
-session_name = os.getenv("SESSION_NAME", "moomen_session")
+api_id = int(os.getenv("API_ID"))
+api_hash = os.getenv("API_HASH")
+sender_email = os.getenv("SENDER_EMAIL")
+app_password = os.getenv("APP_PASSWORD")
+recipient_email = os.getenv("RECIPIENT_EMAIL")
+
 
 # ✅ قراءة بيانات الإيميل من متغيرات البيئة
 sender_email = os.getenv("SENDER_EMAIL", "")
