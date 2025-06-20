@@ -6,6 +6,8 @@ import os
 
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
+session_name = "moomen_session"  # ✅ ضيف السطر ده هنا
+client = TelegramClient(session_name, api_id, api_hash)
 sender_email = os.getenv("SENDER_EMAIL")
 app_password = os.getenv("APP_PASSWORD")
 recipient_email = os.getenv("RECIPIENT_EMAIL")
