@@ -1,22 +1,17 @@
+import os
 from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 import asyncio
 import smtplib
 from email.mime.text import MIMEText
-import os
 
+# ✅ متغيرات البيئة
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
-session_name = "moomen_session_v2"  # ← اسم جديد
-client = TelegramClient(session_name, api_id, api_hash)
-sender_email = os.getenv("SENDER_EMAIL")
-app_password = os.getenv("APP_PASSWORD")
-recipient_email = os.getenv("RECIPIENT_EMAIL")
-
-
-# ✅ قراءة بيانات الإيميل من متغيرات البيئة
-sender_email = os.getenv("SENDER_EMAIL", "")
-app_password = os.getenv("APP_PASSWORD", "")
-recipient_email = os.getenv("RECIPIENT_EMAIL", "")
+sender_email = os.getenv("EMAIL_SENDER")
+app_password = os.getenv("EMAIL_PASS")
+recipient_email = os.getenv("EMAIL_RECEIVER")
+session_name = "moomen_session_v3"  # ← اسم جديد للجلسة
 
 # ✅ تابع إرسال الإيميل
 def send_email_alert(subject, body):
@@ -24,7 +19,6 @@ def send_email_alert(subject, body):
     msg['Subject'] = subject
     msg['From'] = sender_email
     msg['To'] = recipient_email
-
     try:
         server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
         server.login(sender_email, app_password)
@@ -44,13 +38,10 @@ async def handle_message(event):
     message_text = event.raw_text.lower()
 
     if any(word in message_text for word in ["هام", "عاجل", "ضروري"]):
-        # ✉️ إرسال إيميل
         send_email_alert(
             subject="📌 رسالة تليجرام مهمة",
             body=f"المرسل: {name}\n\nالرسالة:\n{event.raw_text}"
         )
-
-        # 🔁 رد تلقائي
         await event.reply("📌 تم استلام رسالتك الهامة، هبلّغ مؤمن فورًا إن شاء الله.")
         print(f"🚨 رسالة مهمة من {name}: {event.raw_text}")
     else:
@@ -58,7 +49,6 @@ async def handle_message(event):
 
 # ✅ تشغيل البوت
 print("🤖 جاري تشغيل البوت من رقمك...")
-
 async def main():
     await client.start()
     print("✅ البوت شغال دلوقتي. مستني الرسائل...")
